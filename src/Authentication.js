@@ -15,7 +15,8 @@ import LSKEYS from './LSKEYS'
  * Authentication handler object
  * @param params   configuration object requires:
  *  - authStyles Object containing AuthDriver type objects
- *  - baseURL String url to base all http requests to
+ *  ? noAxios Boolean skip axios loading
+ *  ? baseURL String url to base all http requests to
  *  ? reactiveChange optional Function to notify an external datastore of a changed value
  * @constructor
  */
@@ -23,7 +24,7 @@ function Authentication (params) {
   if (params.authStyles === undefined) {
     throw new Error('authStyles are required for Authentication')
   }
-  if (params.baseURL === undefined) {
+  if (params.baseURL === undefined && !params.noAxios) {
     throw new Error('baseURL is required for Authentication')
   }
   this.authStyles = params.authStyles
@@ -139,6 +140,12 @@ Authentication.prototype.login = function (style) {
 Authentication.prototype.logout = function () {
   if (this.currentAuthDriver) {
     this.currentAuthDriver.logout()
+  }
+}
+
+Authentication.prototype.backgroundLogin = async function() {
+  if(this.currentAuthDriver) {
+    return await this.currentAuthDriver.backgroundLogin()
   }
 }
 export { Authentication, Authentication as default }

@@ -22,6 +22,14 @@ describe('Authentication.js', () => {
     }
     expect(tryAction).toThrow('baseURL is required for Authentication')
   })
+  it('does not require baseURL if noAxios is defined', () => {
+       let tryAction = () => {
+      /* eslint-disable no-new */
+      new Authentication({ authStyles: {}, noAxios: true})
+    }
+    expect(tryAction).not.toThrow('baseURL is required for Authentication')
+
+  })
   it('sets reactiveChange if in params', () => {
     let params = {
       authStyles: {},
@@ -69,6 +77,11 @@ describe('Authentication.js', () => {
     it('calls correct AuthDriver.login() when login() is called', () => {
       auth.login('TEST')
       expect(testDriver.login).toHaveBeenCalled()
+    })
+    it('calls correct correct AuthDriver.backgroundLogin() when backgroundLogin() is called', () => {
+      auth.currentAuthStyle = "TEST"
+      auth.backgroundLogin()
+      expect(testDriver.backgroundLogin).toHaveBeenCalled()
     })
   })
 })
