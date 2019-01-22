@@ -53,11 +53,31 @@ describe('AuthPlugin.js', () => {
       wrapper.vm.$auth.logout()
       expect(testDriver.logout).toHaveBeenCalled()
     })
+    it('calls backgroundLogin on the correct AuthDriver', () => {
+      wrapper.vm.$auth.backgroundLogin()
+      expect(testDriver.backgroundLogin).toHaveBeenCalled()
+    })
     it('returns idToken from AuthDriver', () => {
       expect(wrapper.vm.$auth.idToken).toBe(testDriver.idToken)
     })
     it('returns decodedToken from AuthDriver', () => {
       expect(wrapper.vm.$auth.decodedToken).toBe(testDriver.decodedToken)
+    })
+  })
+  describe('$http on noAxios instance', () => {
+    beforeEach(() => {
+      wrapper.vm.$http = null
+      localStorage.setItem(LSKEYS.AUTH_STYLE, 'TEST')
+      localVue.use(AuthPlugin, {
+        authStyles: {
+          'TEST': testDriver
+        },
+        noAxios: true
+      })
+    })
+
+    it('should not set $http instance when init() is able to complete', () => {
+      expect(wrapper.vm.$http).toBeNull()
     })
   })
   describe('$auth instance property', () => {

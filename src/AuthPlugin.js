@@ -24,12 +24,16 @@ const AuthPlugin = {
     }
     // initialize Authentication manager
     Vue.Authentication = new Authentication(opts)
-    // attach http object to vue prototype
-    Vue.prototype.$http = Vue.Authentication.http
+
+    if(!opts.noAxios) {
+      // attach http object to vue prototype
+      Vue.prototype.$http = Vue.Authentication.http
+    }
     // attach auth interface to vue prototype
     Vue.prototype.$auth = {
       login (style) { Vue.Authentication.login(style) },
       logout () { Vue.Authentication.logout() },
+      backgroundLogin() { Vue.Authentication.backgroundLogin() },
       get styles () { return Vue.Authentication.styles },
       get currentAuthDriver () { return Vue.Authentication.currentAuthDriver },
       get currentAuthStyle () { return authInterface.$data.currentAuthStyle },
